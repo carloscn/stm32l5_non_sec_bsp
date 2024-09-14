@@ -43,10 +43,10 @@ enum hal_gpio_speed {
  * This enum defines the possible states of a GPIO pin:
  * either set (high) or reset (low).
  */
-enum hal_gpio_pin_state {
+typedef enum hal_gpio_pin_state {
     HAL_GPIO_PIN_RESET = 0x0,        // Pin is low
     HAL_GPIO_PIN_SET = 0x1           // Pin is high
-};
+} HAL_GPIO_PIN_STATE;
 
 typedef enum hal_gpio_interrupt_event {
     RISING = 0x0,
@@ -54,18 +54,19 @@ typedef enum hal_gpio_interrupt_event {
     RISING_FALLING
 } HAL_GPIO_INTE_EVENT;
 
+typedef enum hal_gpio_num {
+    HAL_GPIO_0 = 0x0,
+    HAL_GPIO_1,
+    HAL_GPIO_2,
+    HAL_GPIO_3,
+    HAL_GPIO_4,
+    HAL_GPIO_MAX
+} HAL_GPIO_NUM;
 
 typedef struct hal_gpio_ctx_t {
-    HAL_GPIO_PORT *group;            // GPIO group (e.g., GPIOC)
-    uint32_t pin;                    // Pin number (e.g., GPIO_PIN_0)
-    enum hal_gpio_mode mode;         // GPIO mode (input, output, alternate, analog)
-    enum hal_gpio_pull pull;         // Pull-up or pull-down setting
-    enum hal_gpio_speed speed;       // GPIO speed
-    uint32_t alternate;              // Alternate function mode (if applicable)
-    uint32_t irq_number;
+    HAL_GPIO_NUM hal_num;                    // Pin number (e.g., GPIO_PIN_0)
     void *interrupt_handler;
 } HAL_GPIO_CTX;
-
 
 /**
  * @brief Initialize the specified GPIO pin according to the context provided.
@@ -99,7 +100,7 @@ void hal_gpio_deinit(HAL_GPIO_CTX *gpio);
  * @param res Pointer to an enum hal_gpio_pin_state variable where the result will be stored.
  * @return int32_t HAL_SUCCESS on success, HAL_ERROR_NULL_POINTER if the gpio or res pointer is NULL.
  */
-int32_t hal_gpio_read_pin(HAL_GPIO_CTX *gpio, enum hal_gpio_pin_state *res);
+int32_t hal_gpio_read_pin(HAL_GPIO_CTX *gpio, HAL_GPIO_PIN_STATE *res);
 
 /**
  * @brief Write a state to the specified GPIO pin.
@@ -112,7 +113,7 @@ int32_t hal_gpio_read_pin(HAL_GPIO_CTX *gpio, enum hal_gpio_pin_state *res);
  * @return int32_t HAL_SUCCESS on success, HAL_ERROR_NULL_POINTER if the gpio pointer is NULL,
  *                 or HAL_ERROR_UNSUPPORTED if the state is invalid.
  */
-int32_t hal_gpio_write_pin(HAL_GPIO_CTX *gpio, enum hal_gpio_pin_state state);
+int32_t hal_gpio_write_pin(HAL_GPIO_CTX *gpio, HAL_GPIO_PIN_STATE state);
 
 /**
  * @brief Toggle the specified GPIO pin's state.

@@ -75,7 +75,8 @@ Core/Src/system_stm32l5xx.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
 Core/HAL/hal_gpio.c \
-Core/HAL/hal_utils.c
+Core/HAL/hal_utils.c \
+Core/HAL/hal_uart.c
 
 # ASM sources
 ASM_SOURCES =  \

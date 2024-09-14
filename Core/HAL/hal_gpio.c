@@ -1,8 +1,185 @@
 #include "hal_err.h"
 #include "hal_gpio.h"
-#include "stm32l5xx.h"
+#include "stm32l552xx.h"
+#include "stm32l5xx_hal.h"
 #include "stm32l5xx_hal_gpio.h"
 #include <stdio.h>
+
+static int32_t stm32l5xx_gpio_a9_init_map_to_gpio_0(void)
+{
+    GPIO_InitTypeDef gpio_init = {0};
+    gpio_init.Pin = GPIO_PIN_9;
+    gpio_init.Mode = GPIO_MODE_OUTPUT_PP;
+    gpio_init.Pull = GPIO_PULLUP;
+    gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    gpio_init.Alternate = 0;
+    HAL_GPIO_Init(GPIOA, &gpio_init);
+
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    return HAL_SUCCESS;
+}
+
+static void stm32l5xx_gpio_a9_deinit_map_to_gpio_0(void)
+{
+    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9);
+}
+
+static int32_t stm32l5xx_gpio_a9_read_pin_map_to_gpio_0(HAL_GPIO_PIN_STATE *res)
+{
+    int32_t ret = HAL_SUCCESS;
+    GPIO_PinState pin_state = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_9);
+
+    if (pin_state > GPIO_PIN_SET) {
+        ret = HAL_ERR_UNSUPPORTED;
+        goto finish;
+    }
+
+    *res = pin_state == GPIO_PIN_SET ? \
+           HAL_GPIO_PIN_SET: \
+           HAL_GPIO_PIN_RESET;
+finish:
+    return ret;
+}
+
+static void stm32l5xx_gpio_a9_write_pin_map_to_gpio_0(GPIO_PinState value)
+{
+    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, value);
+}
+
+static void stm32l5xx_gpio_a9_toggle_pin_map_to_gpio_0(void)
+{
+    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_9);
+}
+
+static int32_t stm32l5xx_gpio_a9_lock_pin_map_to_gpio_0(void)
+{
+    int32_t ret = HAL_SUCCESS;
+    HAL_StatusTypeDef ret_x = \
+        HAL_GPIO_LockPin(GPIOA, GPIO_PIN_9);
+    if (ret_x != HAL_OK) {
+        ret = HAL_ERR_HW_CONTROL;
+    }
+
+    return ret;
+}
+
+static int32_t stm32l5xx_gpio_b7_init_map_to_gpio_1(void)
+{
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+
+    GPIO_InitTypeDef gpio_init = {0};
+    gpio_init.Pin = GPIO_PIN_7;
+    gpio_init.Mode = GPIO_MODE_OUTPUT_PP;
+    gpio_init.Pull = GPIO_PULLUP;
+    gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    gpio_init.Alternate = 0;
+    HAL_GPIO_Init(GPIOA, &gpio_init);
+
+    return HAL_SUCCESS;
+}
+
+static void stm32l5xx_gpio_b7_deinit_map_to_gpio_1(void)
+{
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_7);
+}
+
+static int32_t stm32l5xx_gpio_b7_read_pin_map_to_gpio_1(HAL_GPIO_PIN_STATE *res)
+{
+    int32_t ret = HAL_SUCCESS;
+    GPIO_PinState pin_state = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7);
+
+    if (pin_state > GPIO_PIN_SET) {
+        ret = HAL_ERR_UNSUPPORTED;
+        goto finish;
+    }
+
+    *res = pin_state == GPIO_PIN_SET ? \
+           HAL_GPIO_PIN_SET: \
+           HAL_GPIO_PIN_RESET;
+finish:
+    return ret;
+}
+
+static void stm32l5xx_gpio_b7_write_pin_map_to_gpio_1(GPIO_PinState value)
+{
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, value);
+}
+
+static void stm32l5xx_gpio_b7_toggle_pin_map_to_gpio_1(void)
+{
+    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+}
+
+static int32_t stm32l5xx_gpio_b7_lock_pin_map_to_gpio_1(void)
+{
+    int32_t ret = HAL_SUCCESS;
+    HAL_StatusTypeDef ret_x = \
+        HAL_GPIO_LockPin(GPIOB, GPIO_PIN_7);
+    if (ret_x != HAL_OK) {
+        ret = HAL_ERR_HW_CONTROL;
+    }
+
+    return ret;
+}
+
+static int32_t stm32l5xx_gpio_c7_init_map_to_gpio_2(void)
+{
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+
+    GPIO_InitTypeDef gpio_init = {0};
+    gpio_init.Pin = GPIO_PIN_7;
+    gpio_init.Mode = GPIO_MODE_OUTPUT_PP;
+    gpio_init.Pull = GPIO_PULLUP;
+    gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    gpio_init.Alternate = 0;
+    HAL_GPIO_Init(GPIOA, &gpio_init);
+
+    return HAL_SUCCESS;
+}
+
+static void stm32l5xx_gpio_c7_deinit_map_to_gpio_2(void)
+{
+    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_7);
+}
+
+static int32_t stm32l5xx_gpio_c7_read_pin_map_to_gpio_2(HAL_GPIO_PIN_STATE *res)
+{
+    int32_t ret = HAL_SUCCESS;
+    GPIO_PinState pin_state = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_7);
+
+    if (pin_state > GPIO_PIN_SET) {
+        ret = HAL_ERR_UNSUPPORTED;
+        goto finish;
+    }
+
+    *res = pin_state == GPIO_PIN_SET ? \
+           HAL_GPIO_PIN_SET: \
+           HAL_GPIO_PIN_RESET;
+finish:
+    return ret;
+}
+
+static void stm32l5xx_gpio_c7_write_pin_map_to_gpio_2(GPIO_PinState value)
+{
+    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, value);
+}
+
+static void stm32l5xx_gpio_c7_toggle_pin_map_to_gpio_2(void)
+{
+    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_7);
+}
+
+static int32_t stm32l5xx_gpio_c7_lock_pin_map_to_gpio_2(void)
+{
+    int32_t ret = HAL_SUCCESS;
+    HAL_StatusTypeDef ret_x = \
+        HAL_GPIO_LockPin(GPIOC, GPIO_PIN_7);
+    if (ret_x != HAL_OK) {
+        ret = HAL_ERR_HW_CONTROL;
+    }
+
+    return ret;
+}
 
 // Initialize the specified GPIO pin according to the hal_gpio_init structure
 int32_t hal_gpio_init(HAL_GPIO_CTX *gpio)
@@ -14,16 +191,34 @@ int32_t hal_gpio_init(HAL_GPIO_CTX *gpio)
         goto finish;
     }
 
-    GPIO_InitTypeDef gpio_init = {0};
-    gpio_init.Pin = gpio->pin;
-    gpio_init.Mode = gpio->mode;
-    gpio_init.Pull = gpio->pull;
-    gpio_init.Speed = gpio->speed;
-    gpio_init.Alternate = gpio->alternate;
+    switch(gpio->hal_num) {
+        case HAL_GPIO_0:
+            ret = stm32l5xx_gpio_a9_init_map_to_gpio_0();
+            if (ret != HAL_SUCCESS) {
+                goto finish;
+            }
+            break;
+        case HAL_GPIO_1:
+            ret = stm32l5xx_gpio_b7_init_map_to_gpio_1();
+            if (ret != HAL_SUCCESS) {
+                goto finish;
+            }
+            break;
+        case HAL_GPIO_2:
+            ret = stm32l5xx_gpio_c7_init_map_to_gpio_2();
+            if (ret != HAL_SUCCESS) {
+                goto finish;
+            }
+            break;
+#if LOCK_CODE
+        case HAL_GPIO_3:
+        case HAL_GPIO_4:
+#endif /* LOCK_CODE */
+        default:
+            ret = HAL_ERR_HW_LACK;
+            goto finish;
+    }
 
-    HAL_GPIO_Init((GPIO_TypeDef *)gpio->group, &gpio_init);
-
-    gpio->interrupt_handler = NULL;
 finish:
     return ret;
 }
@@ -34,11 +229,27 @@ void hal_gpio_deinit(HAL_GPIO_CTX *gpio)
     if (NULL == gpio) {
         return;
     }
-    HAL_GPIO_DeInit((GPIO_TypeDef *)gpio->group, gpio->pin);
+    switch(gpio->hal_num) {
+        case HAL_GPIO_0:
+            stm32l5xx_gpio_a9_deinit_map_to_gpio_0();
+            return;
+        case HAL_GPIO_1:
+            stm32l5xx_gpio_b7_deinit_map_to_gpio_1();
+            return;
+        case HAL_GPIO_2:
+            stm32l5xx_gpio_c7_deinit_map_to_gpio_2();
+            return;
+#if LOCK_CODE
+        case HAL_GPIO_3:
+        case HAL_GPIO_4:
+#endif /* LOCK_CODE */
+        default:
+            return;
+    }
 }
 
 // Read the input pin state
-int32_t hal_gpio_read_pin(HAL_GPIO_CTX *gpio, enum hal_gpio_pin_state *res)
+int32_t hal_gpio_read_pin(HAL_GPIO_CTX *gpio, HAL_GPIO_PIN_STATE *res)
 {
     int32_t ret = HAL_SUCCESS;
 
@@ -47,23 +258,41 @@ int32_t hal_gpio_read_pin(HAL_GPIO_CTX *gpio, enum hal_gpio_pin_state *res)
         ret = HAL_ERR_NULL_POINTER;
         goto finish;
     }
-    GPIO_PinState pin_state = HAL_GPIO_ReadPin((GPIO_TypeDef *)gpio->group,
-                                               (uint16_t)gpio->pin);
-    if (pin_state > GPIO_PIN_SET) {
-        ret = HAL_ERR_UNSUPPORTED;
-        goto finish;
-    }
 
-    *res = pin_state == GPIO_PIN_SET ? \
-           HAL_GPIO_PIN_SET: \
-           HAL_GPIO_PIN_RESET;
+    switch(gpio->hal_num) {
+        case HAL_GPIO_0:
+            ret = stm32l5xx_gpio_a9_read_pin_map_to_gpio_0(res);
+            if (ret != HAL_SUCCESS) {
+                goto finish;
+            }
+            break;
+        case HAL_GPIO_1:
+            ret = stm32l5xx_gpio_b7_read_pin_map_to_gpio_1(res);
+            if (ret != HAL_SUCCESS) {
+                goto finish;
+            }
+            break;
+        case HAL_GPIO_2:
+            ret = stm32l5xx_gpio_c7_read_pin_map_to_gpio_2(res);
+            if (ret != HAL_SUCCESS) {
+                goto finish;
+            }
+            break;
+#if LOCK_CODE
+        case HAL_GPIO_3:
+        case HAL_GPIO_4:
+#endif /* LOCK_CODE */
+        default:
+            ret = HAL_ERR_HW_LACK;
+            goto finish;
+    }
 
 finish:
     return ret;
 }
 
 // Write to the specified output pin
-int32_t hal_gpio_write_pin(HAL_GPIO_CTX *gpio, enum hal_gpio_pin_state state)
+int32_t hal_gpio_write_pin(HAL_GPIO_CTX *gpio, HAL_GPIO_PIN_STATE state)
 {
     int32_t ret = HAL_SUCCESS;
 
@@ -72,15 +301,33 @@ int32_t hal_gpio_write_pin(HAL_GPIO_CTX *gpio, enum hal_gpio_pin_state state)
         ret = HAL_ERR_NULL_POINTER;
         goto finish;
     }
-
     // Check if the state is valid
     if ((state != HAL_GPIO_PIN_SET) && (state != HAL_GPIO_PIN_RESET)) {
         ret = HAL_ERR_UNSUPPORTED;
         goto finish;
     }
+    GPIO_PinState s = (state == HAL_GPIO_PIN_SET) ? \
+                       GPIO_PIN_SET: \
+                       GPIO_PIN_RESET;
 
-    // Write the pin state
-    HAL_GPIO_WritePin((GPIO_TypeDef *)gpio->group, (uint16_t)gpio->pin, (GPIO_PinState)state);
+    switch(gpio->hal_num) {
+        case HAL_GPIO_0:
+            stm32l5xx_gpio_a9_write_pin_map_to_gpio_0(s);
+            break;
+        case HAL_GPIO_1:
+            stm32l5xx_gpio_b7_write_pin_map_to_gpio_1(s);
+            break;
+        case HAL_GPIO_2:
+            stm32l5xx_gpio_c7_write_pin_map_to_gpio_2(s);
+            break;
+#if LOCK_CODE
+        case HAL_GPIO_3:
+        case HAL_GPIO_4:
+#endif /* LOCK_CODE */
+        default:
+            ret = HAL_ERR_HW_LACK;
+            goto finish;
+    }
 
 finish:
     return ret;
@@ -97,8 +344,24 @@ int32_t hal_gpio_toggle_pin(HAL_GPIO_CTX *gpio)
         goto finish;
     }
 
-    // Toggle the GPIO pin
-    HAL_GPIO_TogglePin((GPIO_TypeDef *)gpio->group, (uint16_t)gpio->pin);
+    switch(gpio->hal_num) {
+        case HAL_GPIO_0:
+            stm32l5xx_gpio_a9_toggle_pin_map_to_gpio_0();
+            break;
+        case HAL_GPIO_1:
+            stm32l5xx_gpio_b7_toggle_pin_map_to_gpio_1();
+            break;
+        case HAL_GPIO_2:
+            stm32l5xx_gpio_c7_toggle_pin_map_to_gpio_2();
+            break;
+#if LOCK_CODE
+        case HAL_GPIO_3:
+        case HAL_GPIO_4:
+#endif /* LOCK_CODE */
+        default:
+            ret = HAL_ERR_HW_LACK;
+            goto finish;
+    }
 
 finish:
     return ret;
@@ -115,66 +378,52 @@ int32_t hal_gpio_lock_pin(HAL_GPIO_CTX *gpio)
         goto finish;
     }
 
-    // Lock the GPIO pin configuration
-    HAL_StatusTypeDef ret_x = \
-        HAL_GPIO_LockPin((GPIO_TypeDef *)gpio->group, (uint16_t)gpio->pin);
-    if (ret_x != HAL_OK) {
-        ret = HAL_ERR_HW_CONTROL;
+    switch(gpio->hal_num) {
+        case HAL_GPIO_0:
+            ret = stm32l5xx_gpio_a9_lock_pin_map_to_gpio_0();
+            if (ret != HAL_SUCCESS) {
+                goto finish;
+            }
+            break;
+        case HAL_GPIO_1:
+            ret = stm32l5xx_gpio_b7_lock_pin_map_to_gpio_1();
+            if (ret != HAL_SUCCESS) {
+                goto finish;
+            }
+            break;
+        case HAL_GPIO_2:
+            ret = stm32l5xx_gpio_c7_lock_pin_map_to_gpio_2();
+            if (ret != HAL_SUCCESS) {
+                goto finish;
+            }
+            break;
+#if LOCK_CODE
+        case HAL_GPIO_3:
+        case HAL_GPIO_4:
+#endif /* LOCK_CODE */
+        default:
+            ret = HAL_ERR_HW_LACK;
+            goto finish;
     }
 
 finish:
     return ret;
 }
 
-// Function to register an interrupt for a GPIO pin
+// [TODO]
 int32_t hal_gpio_reg_interrupt(HAL_GPIO_CTX *gpio, HAL_GPIO_INTE_EVENT event, void *handler_entry)
 {
     int32_t ret = HAL_SUCCESS;
 
-    if (gpio == NULL || handler_entry == NULL) {
-        ret = HAL_ERR_NULL_POINTER;
-        goto finish;
-    }
-
-    uint32_t mode = 0;
-    if (event == FALLING) {
-        mode = GPIO_MODE_IT_FALLING;
-    } else if (event == RISING) {
-        mode = GPIO_MODE_IT_RISING;
-    } else if (event == RISING_FALLING) {
-        mode = GPIO_MODE_IT_RISING_FALLING;
-    }else {
-        ret = HAL_ERR_UNSUPPORTED;
-        goto finish;
-    }
-    // Save the interrupt handler in the context
-    gpio->interrupt_handler = handler_entry;
-
-    // Configure the EXTI line for the GPIO pin
-    GPIO_InitTypeDef gpio_init = {0};
-    gpio_init.Pin = gpio->pin;
-    gpio_init.Mode = gpio->mode;
-    gpio_init.Pull = gpio->pull;
-    gpio_init.Speed = gpio->speed;
-    gpio_init.Alternate = gpio->alternate;
-    HAL_GPIO_Init(gpio->group, &gpio_init);
-
-
-finish:
     return ret;
 }
 
-// Function to unregister the interrupt for a GPIO pin
+// [TODO]
 int32_t hal_gpio_unreg_interrupt(HAL_GPIO_CTX *gpio)
 {
     if (gpio == NULL) {
         return HAL_ERR_NULL_POINTER;
     }
-
-    // Disable the EXTI line associated with the GPIO pin
-    uint32_t irq_number = 0;
-    GPIO_InitTypeDef   GPIO_InitStructure;
-
 
     return HAL_SUCCESS;
 }
@@ -183,36 +432,18 @@ int32_t hal_gpio_unreg_interrupt(HAL_GPIO_CTX *gpio)
 // Mock test function for hal_gpio
 void hal_gpio_unit_test(void)
 {
-    size_t i = 1000;
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
+    size_t i = 1;
 
     HAL_GPIO_CTX blue_led_test_gpio = {
-        .group = (HAL_GPIO_PORT *)GPIOB,
-        .pin = GPIO_PIN_7,
-        .mode = GPIO_MODE_OUTPUT_PP,
-        .pull = GPIO_PULLUP,
-        .speed = GPIO_SPEED_FREQ_VERY_HIGH,
-        .alternate = 0
+        .hal_num = HAL_GPIO_0,
     };
 
     HAL_GPIO_CTX red_led_test_gpio = {
-        .group = (HAL_GPIO_PORT *)GPIOA,
-        .pin = GPIO_PIN_9,
-        .mode = GPIO_MODE_OUTPUT_PP,
-        .pull = GPIO_PULLUP,
-        .speed = GPIO_SPEED_FREQ_VERY_HIGH,
-        .alternate = 0
+        .hal_num = HAL_GPIO_1,
     };
 
     HAL_GPIO_CTX green_led_test_gpio = {
-        .group = (HAL_GPIO_PORT *)GPIOC,
-        .pin = GPIO_PIN_7,
-        .mode = GPIO_MODE_OUTPUT_PP,
-        .pull = GPIO_PULLUP,
-        .speed = GPIO_SPEED_FREQ_VERY_HIGH,
-        .alternate = 0
+        .hal_num = HAL_GPIO_2,
     };
 
     // Test GPIO initialization

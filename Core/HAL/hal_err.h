@@ -22,5 +22,12 @@
 #define HAL_ERR_HW_READ           -18
 #define HAL_ERR_HW_WRITE          -19
 #define HAL_ERR_HW_CONTROL        -20
+#define HAL_ERR_HW_LACK           -21
+#define HAL_ERR_MALLOC            -22
+#define HAL_ERR_INIT              -23
+#define HAL_ERR_HW_STATE          -24
+#define HAL_ERR_HW_RECV           -25
+#define HAL_ERR_HW_SEND           -26
+
 
 #endif // HAL_ERR_H

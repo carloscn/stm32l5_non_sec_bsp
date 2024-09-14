@@ -699,5 +699,3 @@ HAL_StatusTypeDef HAL_SYSCFG_GetConfigAttributes(uint32_t Item, uint32_t *pAttri
 #endif
 
 #endif /* STM32L5xx_HAL_H */
-
-

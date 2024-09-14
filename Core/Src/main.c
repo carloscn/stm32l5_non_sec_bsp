@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "hal_gpio.h"
+#include "hal_uart.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -106,7 +107,6 @@ int main(void)
   MX_RTC_Init();
   MX_UCPD1_Init();
   MX_USB_PCD_Init();
-  hal_gpio_unit_test();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -115,8 +115,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_7);
+    hal_gpio_unit_test();
     /* Insert delay 100 ms */
+    hal_uart_unit_test();
     HAL_Delay(1000);
   }
   /* USER CODE END 3 */
@@ -181,6 +182,7 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 }
+
 
 /**
   * @brief ADC1 Initialization Function
