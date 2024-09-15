@@ -10,33 +10,6 @@ extern "C" {
 #include "hal_config.h"
 #include "hal_utils.h"
 
-typedef struct GPIO_TypeDef HAL_GPIO_PORT;
-
-// Define GPIO mode types
-enum hal_gpio_mode {
-    HAL_GPIO_MODE_INPUT = 0x0,       // Input mode
-    HAL_GPIO_MODE_OUTPUT_PP = 0x1,   // Output mode, push-pull
-    HAL_GPIO_MODE_OUTPUT_OD = 0x2,   // Output mode, open-drain
-    HAL_GPIO_MODE_ALT_PP = 0x3,      // Alternate function mode, push-pull
-    HAL_GPIO_MODE_ALT_OD = 0x4,      // Alternate function mode, open-drain
-    HAL_GPIO_MODE_ANALOG = 0x5       // Analog mode
-};
-
-// Define GPIO pull-up/pull-down types
-enum hal_gpio_pull {
-    HAL_GPIO_NOPULL = 0x0,           // No pull-up or pull-down
-    HAL_GPIO_PULLUP = 0x1,           // Pull-up resistor enabled
-    HAL_GPIO_PULLDOWN = 0x2          // Pull-down resistor enabled
-};
-
-// Define GPIO speed types
-enum hal_gpio_speed {
-    HAL_GPIO_SPEED_LOW = 0x0,        // Low speed
-    HAL_GPIO_SPEED_MEDIUM = 0x1,     // Medium speed
-    HAL_GPIO_SPEED_HIGH = 0x2,       // High speed
-    HAL_GPIO_SPEED_VERY_HIGH = 0x3   // Very high speed
-};
-
 /**
  * @brief Enum for GPIO pin state.
  *
@@ -47,12 +20,6 @@ typedef enum hal_gpio_pin_state {
     HAL_GPIO_PIN_RESET = 0x0,        // Pin is low
     HAL_GPIO_PIN_SET = 0x1           // Pin is high
 } HAL_GPIO_PIN_STATE;
-
-typedef enum hal_gpio_interrupt_event {
-    RISING = 0x0,
-    FALLING,
-    RISING_FALLING
-} HAL_GPIO_INTE_EVENT;
 
 typedef enum hal_gpio_num {
     HAL_GPIO_0 = 0x0,
@@ -138,7 +105,6 @@ int32_t hal_gpio_toggle_pin(HAL_GPIO_CTX *gpio);
  */
 int32_t hal_gpio_lock_pin(HAL_GPIO_CTX *gpio);
 
-int32_t hal_gpio_reg_interrupt(HAL_GPIO_CTX *gpio, HAL_GPIO_INTE_EVENT event, void *handler_entry);
 
 
 #if HAL_UNIT_TEST

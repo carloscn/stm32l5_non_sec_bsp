@@ -73,7 +73,7 @@ static int32_t stm32l5xx_gpio_b7_init_map_to_gpio_1(void)
     gpio_init.Pull = GPIO_PULLUP;
     gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     gpio_init.Alternate = 0;
-    HAL_GPIO_Init(GPIOA, &gpio_init);
+    HAL_GPIO_Init(GPIOB, &gpio_init);
 
     return HAL_SUCCESS;
 }
@@ -132,7 +132,7 @@ static int32_t stm32l5xx_gpio_c7_init_map_to_gpio_2(void)
     gpio_init.Pull = GPIO_PULLUP;
     gpio_init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     gpio_init.Alternate = 0;
-    HAL_GPIO_Init(GPIOA, &gpio_init);
+    HAL_GPIO_Init(GPIOC, &gpio_init);
 
     return HAL_SUCCESS;
 }
@@ -408,24 +408,6 @@ int32_t hal_gpio_lock_pin(HAL_GPIO_CTX *gpio)
 
 finish:
     return ret;
-}
-
-// [TODO]
-int32_t hal_gpio_reg_interrupt(HAL_GPIO_CTX *gpio, HAL_GPIO_INTE_EVENT event, void *handler_entry)
-{
-    int32_t ret = HAL_SUCCESS;
-
-    return ret;
-}
-
-// [TODO]
-int32_t hal_gpio_unreg_interrupt(HAL_GPIO_CTX *gpio)
-{
-    if (gpio == NULL) {
-        return HAL_ERR_NULL_POINTER;
-    }
-
-    return HAL_SUCCESS;
 }
 
 #if HAL_UNIT_TEST
