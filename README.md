@@ -9,7 +9,8 @@
 
 1. Config your cross compile tool path in `prj.cfg`
 2. `source prj.cfg`
-3. `make -j8`
+3. `git submodule update --init --recursive`
+4. `make -j8`
 
 ## Donwload code
 
