@@ -1,6 +1,6 @@
 /**
  * @file led.h
- * @brief LED blink task (HAL/OSAL only).
+ * @brief LED blink task entry. Task creation is done in main().
  */
 #ifndef APP_LED_H
 #define APP_LED_H
@@ -9,11 +9,12 @@
 extern "C" {
 #endif
 
-/**
- * Create the LED task: toggles the green user LED at a fixed rate.
- * Call before osal_sched_start().
- */
-void led_start(void);
+/* Suggested scheduling parameters for main() to pass to osal_task_create(). */
+#define LED_TASK_STACK_WORDS   (128U)
+#define LED_TASK_PRIORITY      (2U)
+
+/** FreeRTOS/OSAL task function: toggles the green user LED forever. */
+void led_task(void *arg);
 
 #ifdef __cplusplus
 }

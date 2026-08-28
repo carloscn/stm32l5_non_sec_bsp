@@ -1,6 +1,6 @@
 /**
  * @file heartbeat.h
- * @brief Periodic heartbeat / liveness log task (HAL/OSAL only).
+ * @brief Heartbeat log task entry. Task creation is done in main().
  */
 #ifndef APP_HEARTBEAT_H
 #define APP_HEARTBEAT_H
@@ -9,11 +9,12 @@
 extern "C" {
 #endif
 
-/**
- * Create the heartbeat task: logs a counter + free heap once per second.
- * Call before osal_sched_start().
- */
-void heartbeat_start(void);
+/* Suggested scheduling parameters for main() to pass to osal_task_create(). */
+#define HEARTBEAT_TASK_STACK_WORDS   (256U)
+#define HEARTBEAT_TASK_PRIORITY      (2U)
+
+/** FreeRTOS/OSAL task function: logs a counter + free heap once per second. */
+void heartbeat_task(void *arg);
 
 #ifdef __cplusplus
 }

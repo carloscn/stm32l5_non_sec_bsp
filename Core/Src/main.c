@@ -1,10 +1,11 @@
 /**
  ******************************************************************************
  * @file    main.c
- * @brief   Platform-agnostic application entry: HAL + OSAL only.
+ * @brief   Standalone (no-TF-M) application entry: HAL + OSAL only.
  *
- * No ST-HAL / CMSIS / FreeRTOS types here. MCU bring-up is hal_mcu_init();
- * RTOS glue is behind osal_*; each feature is its own module in app/.
+ * No ST-HAL / CMSIS / FreeRTOS types. MCU bring-up is hal_mcu_init(); RTOS
+ * glue is behind osal_*. Every task is created HERE (one place to see what
+ * runs); each feature module only provides its task function.
  * Structure mirrors FreeRTOS_Toggle_Led_Example_S32K312/src/main.c.
  ******************************************************************************
  */
@@ -13,6 +14,7 @@
 #include "hal_uart.h"
 #include "osal_log.h"
 #include "osal_sched.h"
+#include "osal_task.h"
 
 #include "led.h"
 #include "heartbeat.h"
@@ -32,8 +34,13 @@ int main(void)
     osal_log_printf("stm32l5_non_sec_bsp: FreeRTOS %s up",
                     osal_sched_kernel_version());
 
-    led_start();
-    heartbeat_start();
+    /* --- all task creation lives here --- */
+    if (osal_task_create(led_task, "led",
+                         LED_TASK_STACK_WORDS, NULL, LED_TASK_PRIORITY, NULL) != OSAL_OK ||
+        osal_task_create(heartbeat_task, "hb",
+                         HEARTBEAT_TASK_STACK_WORDS, NULL, HEARTBEAT_TASK_PRIORITY, NULL) != OSAL_OK) {
+        osal_panic("task create");
+    }
 
     osal_sched_start();      /* does not return */
 
