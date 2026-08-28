@@ -39,6 +39,7 @@ C_SOURCES =  \
 Core/Src/main.c \
 Core/Src/stm32l5xx_it.c \
 Core/Src/stm32l5xx_hal_msp.c \
+Core/Src/stm32l5xx_hal_timebase_tim.c \
 STM32CubeL5/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_utils.c \
 STM32CubeL5/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_exti.c \
 STM32CubeL5/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_hal_adc.c \
@@ -74,9 +75,29 @@ STM32CubeL5/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_usb.c \
 Core/Src/system_stm32l5xx.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
-Core/HAL/hal_gpio.c \
-Core/HAL/hal_utils.c \
-Core/HAL/hal_uart.c
+hal/src/hal_gpio.c \
+hal/src/hal_uart.c \
+hal/src/hal_irq.c \
+hal/src/hal_mcu.c \
+hal/src/hal_flash.c \
+hal/src/hal_cache.c \
+osal/src/osal_task.c \
+osal/src/osal_mutex.c \
+osal/src/osal_sem.c \
+osal/src/osal_queue.c \
+osal/src/osal_sched.c \
+osal/src/osal_heap.c \
+osal/src/osal_log.c \
+osal/src/osal_utils.c \
+FreeRTOS/list.c \
+FreeRTOS/queue.c \
+FreeRTOS/tasks.c \
+FreeRTOS/timers.c \
+FreeRTOS/event_groups.c \
+FreeRTOS/stream_buffer.c \
+FreeRTOS/portable/MemMang/heap_4.c \
+FreeRTOS/portable/GCC/ARM_CM33_NTZ/non_secure/port.c \
+FreeRTOS/portable/GCC/ARM_CM33_NTZ/non_secure/portasm.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -152,7 +173,11 @@ C_INCLUDES =  \
 -ISTM32CubeL5/Drivers/STM32L5xx_HAL_Driver/Inc/Legacy \
 -ISTM32CubeL5/Drivers/CMSIS/Include \
 -ISTM32CubeL5/Drivers/CMSIS/Device/ST/STM32L5xx/Include \
--ICore/HAL
+-Ihal/include \
+-Iosal/include \
+-Iconfig \
+-IFreeRTOS/include \
+-IFreeRTOS/portable/GCC/ARM_CM33_NTZ/non_secure
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections

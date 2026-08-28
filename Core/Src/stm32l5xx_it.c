@@ -141,15 +141,13 @@ void UsageFault_Handler(void)
 /**
   * @brief This function handles System service call via SWI instruction.
   */
+/* SVC_Handler is provided by the FreeRTOS port (vPortSVCHandler, mapped in
+ * FreeRTOSConfig.h). */
+#if 0
 void SVC_Handler(void)
 {
-  /* USER CODE BEGIN SVCall_IRQn 0 */
-
-  /* USER CODE END SVCall_IRQn 0 */
-  /* USER CODE BEGIN SVCall_IRQn 1 */
-
-  /* USER CODE END SVCall_IRQn 1 */
 }
+#endif
 
 /**
   * @brief This function handles Debug monitor.
@@ -167,29 +165,14 @@ void DebugMon_Handler(void)
 /**
   * @brief This function handles Pendable request for system service.
   */
+/* PendSV_Handler and SysTick_Handler are owned by the FreeRTOS ARM_CM33_NTZ
+ * port (it defines SysTick_Handler unconditionally). The ST HAL 1 ms timebase
+ * runs off TIM6 instead - see Core/Src/stm32l5xx_hal_timebase_tim.c. */
+#if 0
 void PendSV_Handler(void)
 {
-  /* USER CODE BEGIN PendSV_IRQn 0 */
-
-  /* USER CODE END PendSV_IRQn 0 */
-  /* USER CODE BEGIN PendSV_IRQn 1 */
-
-  /* USER CODE END PendSV_IRQn 1 */
 }
-
-/**
-  * @brief This function handles System tick timer.
-  */
-void SysTick_Handler(void)
-{
-  /* USER CODE BEGIN SysTick_IRQn 0 */
-
-  /* USER CODE END SysTick_IRQn 0 */
-  HAL_IncTick();
-  /* USER CODE BEGIN SysTick_IRQn 1 */
-
-  /* USER CODE END SysTick_IRQn 1 */
-}
+#endif
 
 /******************************************************************************/
 /* STM32L5xx Peripheral Interrupt Handlers                                    */
