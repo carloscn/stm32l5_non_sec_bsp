@@ -75,6 +75,8 @@ STM32CubeL5/Drivers/STM32L5xx_HAL_Driver/Src/stm32l5xx_ll_usb.c \
 Core/Src/system_stm32l5xx.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
+app/led.c \
+app/heartbeat.c \
 hal/src/hal_gpio.c \
 hal/src/hal_uart.c \
 hal/src/hal_irq.c \
@@ -174,6 +176,7 @@ C_INCLUDES =  \
 -ISTM32CubeL5/Drivers/STM32L5xx_HAL_Driver/Inc/Legacy \
 -ISTM32CubeL5/Drivers/CMSIS/Include \
 -ISTM32CubeL5/Drivers/CMSIS/Device/ST/STM32L5xx/Include \
+-Iapp \
 -Ihal/include \
 -Iosal/include \
 -Iconfig \
