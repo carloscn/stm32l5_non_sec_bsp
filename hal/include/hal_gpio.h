@@ -19,7 +19,7 @@ extern "C" {
 typedef enum {
     HAL_GPIO_LED_GREEN = 0,   /* LD1  PC7  */
     HAL_GPIO_LED_BLUE,        /* LD2  PB7  */
-    HAL_GPIO_LED_RED,         /* LD3  PG2  (needs VDDIO2) */
+    HAL_GPIO_LED_RED,         /* LD3  PA9  */
     HAL_GPIO_BTN_USER,        /* B1   PC13 (input) */
     HAL_GPIO_PIN_COUNT
 } hal_gpio_pin_t;

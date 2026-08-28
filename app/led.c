@@ -2,10 +2,10 @@
  * @file led.c
  * @brief LED task body. No task creation here (see main()).
  *
- * NUCLEO-L552ZE-Q user LEDs (UM2581):
+ * NUCLEO-L552ZE-Q user LEDs (see CubeMX Core/Inc/main.h):
  *   LD1 green = PC7   (HAL_GPIO_LED_GREEN)
  *   LD2 blue  = PB7   (HAL_GPIO_LED_BLUE)
- *   LD3 red   = PG2   (HAL_GPIO_LED_RED, needs VDDIO2)
+ *   LD3 red   = PA9   (HAL_GPIO_LED_RED)
  * Runs a 3-LED "chase" so a glance confirms the scheduler is alive.
  */
 #include "led.h"

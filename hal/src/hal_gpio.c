@@ -17,7 +17,7 @@ typedef struct {
 static const hal_gpio_map_t s_map[HAL_GPIO_PIN_COUNT] = {
     [HAL_GPIO_LED_GREEN] = { GPIOC, GPIO_PIN_7,  1U },
     [HAL_GPIO_LED_BLUE]  = { GPIOB, GPIO_PIN_7,  1U },
-    [HAL_GPIO_LED_RED]   = { GPIOG, GPIO_PIN_2,  1U },
+    [HAL_GPIO_LED_RED]   = { GPIOA, GPIO_PIN_9,  1U },  /* LD3; PG2 is VBUS_SENSE */
     [HAL_GPIO_BTN_USER]  = { GPIOC, GPIO_PIN_13, 0U },
 };
 
@@ -29,11 +29,12 @@ hal_err_t hal_gpio_init(void)
         return HAL_ERR_SUCCESS;
     }
 
+    __HAL_RCC_GPIOA_CLK_ENABLE();     /* LD3 red = PA9 */
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
     __HAL_RCC_GPIOG_CLK_ENABLE();
     __HAL_RCC_PWR_CLK_ENABLE();
-    HAL_PWREx_EnableVddIO2();          /* PG[15:2] rail */
+    HAL_PWREx_EnableVddIO2();          /* PG[15:2] rail (LPUART1 console PG7/PG8) */
 
     for (uint32_t i = 0U; i < (uint32_t)HAL_GPIO_PIN_COUNT; i++) {
         GPIO_InitTypeDef gi = {0};

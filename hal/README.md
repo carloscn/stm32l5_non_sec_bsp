@@ -36,7 +36,7 @@ These `.c` files are **byte-identical** to the S32K312 project except
 | header | STM32L552 backing |
 |---|---|
 | `hal_error.h` | shared numeric codes (`HAL_ERR_*`, base `0x7000`) |
-| `hal_gpio.h`  | ST HAL GPIO — NUCLEO-L552ZE-Q LD1 PC7 / LD2 PB7 / LD3 PG2, B1 PC13 |
+| `hal_gpio.h`  | ST HAL GPIO — NUCLEO-L552ZE-Q LD1 PC7 / LD2 PB7 / LD3 PA9, B1 PC13 |
 | `hal_uart.h`  | ST HAL LPUART1 (PG7/PG8 → ST-Link VCP), blocking + IT + line editor |
 | `hal_irq.h`   | CMSIS `NVIC_*` + RAM vector table for `hal_irq_install_handler` |
 | `hal_mcu.h`   | `NVIC_SystemReset` |
