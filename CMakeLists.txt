@@ -51,6 +51,7 @@ target_sources(tfm_ns PRIVATE
     ${REPO}/Core/Src/main.c
     ${REPO}/Core/Src/hal_tick_dwt.c
     ${REPO}/Core/Src/syscalls_ns.c
+    ${REPO}/Core/Src/fault_ns.c
     # NS startup (from platform_ns) provides the fault handlers; no stm32l5xx_it.c
     # and no Core/Inc (that hal_conf pulls ADC/RTC headers platform_ns lacks).
 

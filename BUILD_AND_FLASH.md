@@ -175,9 +175,9 @@ Booting TF-M v2.1.1-LTS
 
 | 问题 | 现象 | 备注 |
 |---|---|---|
-| **NSPE 调度器复位循环** | `[0007]` 之后 `osal_sched_start()` → 板子复位,从头再来 | crypto 冒烟(`main()` 里,调度器之前)完整跑完并 PASS。halt 时 PC 在 secure `p256-m`(即复位后重跑测试),debugger 读 NS `SCB->VTOR` = 0。FreeRTOS `ARM_CM33_NTZ` 端口在 TF-M NS 下启动首任务还需调。独立镜像不受影响。 |
+| ~~NSPE 调度器复位循环~~ **已修复(2026-08-28)** | 曾经 `[0008] main: starting scheduler` 之后整机复位循环 | 根因:`config/FreeRTOSConfig.h` 的 `configPRIO_BITS` 回退成 4(应为 3),叠加 TF-M `AIRCR.PRIS=1`,`configMAX_SYSCALL_INTERRUPT_PRIORITY` 经 PRIS 重映射后与 NS SVCall 优先级相等 → `vStartFirstTask` 里首个 `svc` 被优先级挡住 → 强制 HardFault → `tfm_core_panic` → 复位。修复:`TFM_NS` 构建写死 `configPRIO_BITS 3`。详见 `design/docs/02-secure-boot-keymgmt/11-tfm-nspe-freertos-svc-hardfault-debug.md`。 |
 | **TZEN 关不掉** | `-ob TZEN=0` / `-tzenreg` 在 SWD 下失败 | 需 USB DFU(BOOT0 高 + USB_USER 口 + `port=USB1 -tzenreg`) |
-| **LD3(红,PG2)可能不亮** | 需要 VDDIO2,NS 侧可能无权开 PWR | LD1(PC7)/ LD2(PB7)正常 |
+| ~~LD3(红)不亮~~ **已修复** | 曾把 LD3 接到 PG2 | LD3 红实际是 **PA9**(见 CubeMX `Core/Inc/main.h`),PG2 是 VBUS_SENSE。`hal_gpio.c` 已改为 `GPIOA/PIN_9` 并加 `__HAL_RCC_GPIOA_CLK_ENABLE()`。 |
 
 ---
 

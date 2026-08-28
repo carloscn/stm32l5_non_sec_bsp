@@ -13,6 +13,7 @@ void heartbeat_task(void *arg)
 {
     uint32_t n = 0U;
     (void)arg;
+    osal_log_info("hb: task entered");
     for (;;) {
         osal_log_printf("heartbeat %lu  (heap free %u)",
                         (unsigned long)n++, (unsigned)osal_heap_get_free());

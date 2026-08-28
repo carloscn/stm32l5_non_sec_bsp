@@ -64,8 +64,10 @@ int main(void)
         osal_panic("task create");
     }
 
+    osal_log_info("main: starting scheduler");
     osal_sched_start();      /* does not return */
 
+    osal_log_info("main: osal_sched_start RETURNED (unexpected)");
     for (;;) {
     }
     return 0;

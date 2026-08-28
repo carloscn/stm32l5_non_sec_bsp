@@ -73,6 +73,16 @@ hal_err_t hal_mcu_init(void)
     SCB->VTOR = (uint32_t)__VECTOR_TABLE;
     __DSB();
     __ISB();
+
+    /* Enable the NS configurable-fault handlers so a MemManage / BusFault /
+     * UsageFault in NS thread mode vectors to our handlers (fault_ns.c) with a
+     * CFSR dump, instead of escalating straight to the Secure HardFault (which
+     * TF-M turns into a silent reboot). Bring-up diagnostics only. */
+    SCB->SHCSR |= SCB_SHCSR_USGFAULTENA_Msk |
+                  SCB_SHCSR_BUSFAULTENA_Msk |
+                  SCB_SHCSR_MEMFAULTENA_Msk;
+    __DSB();
+    __ISB();
 #endif
 
     if (HAL_Init() != HAL_OK) {          /* NVIC group, HAL tick (TIM6 - see timebase file) */
