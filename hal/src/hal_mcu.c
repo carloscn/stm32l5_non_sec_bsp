@@ -50,8 +50,6 @@ static hal_err_t clock_config(void)
     }
     return HAL_ERR_SUCCESS;
 }
-#endif /* !TFM_NS */
-
 static hal_err_t icache_enable(void)
 {
     if (HAL_ICACHE_ConfigAssociativityMode(ICACHE_1WAY) != HAL_OK) {
@@ -62,23 +60,36 @@ static hal_err_t icache_enable(void)
     }
     return HAL_ERR_SUCCESS;
 }
+#endif /* !TFM_NS */
 
 hal_err_t hal_mcu_init(void)
 {
+#if defined(TFM_NS)
+    /* The SPE launches NS without programming the non-secure SCB->VTOR, so it
+     * reads 0. The FreeRTOS CM33 port derives the initial MSP from *VTOR when
+     * starting the first task -> reads addr 0 -> SecureFault -> reset loop.
+     * Point it at our vector table (start of the NS image). */
+    extern const uint32_t __VECTOR_TABLE[];
+    SCB->VTOR = (uint32_t)__VECTOR_TABLE;
+    __DSB();
+    __ISB();
+#endif
+
     if (HAL_Init() != HAL_OK) {          /* NVIC group, HAL tick (TIM6 - see timebase file) */
         return HAL_ERR_INTERNAL;
     }
 
 #if !defined(TFM_NS)
     /* As the TF-M NSPE the SPE already configured the clock tree / flash
-     * latency; the NS world must not touch those (secure) registers. */
+     * latency / ICACHE; the NS world must not touch those (secure) registers. */
     hal_err_t rc = clock_config();
     if (rc != HAL_ERR_SUCCESS) {
         return rc;
     }
-#endif
-
     return icache_enable();
+#else
+    return HAL_ERR_SUCCESS;
+#endif
 }
 
 void hal_mcu_system_reset(void)

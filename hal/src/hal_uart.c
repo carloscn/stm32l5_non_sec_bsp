@@ -34,11 +34,17 @@ static int32_t lpuart1_msp_init(void)
     GPIO_InitTypeDef gi = {0};
     RCC_PeriphCLKInitTypeDef pclk = {0};
 
+#if !defined(TFM_NS)
+    /* NSPE: the SPE already selected the LPUART1 kernel clock (it uses LPUART1
+     * as its own console); RCCEx is a secure-side driver here anyway. */
     pclk.PeriphClockSelection = RCC_PERIPHCLK_LPUART1;
     pclk.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_PCLK1;
     if (HAL_RCCEx_PeriphCLKConfig(&pclk) != HAL_OK) {
         return HAL_ERR_UART_INIT_FAILED;
     }
+#else
+    (void)pclk;
+#endif
 
     __HAL_RCC_PWR_CLK_ENABLE();
     HAL_PWREx_EnableVddIO2();               /* PG[15:2] rail */
@@ -160,6 +166,13 @@ hal_err_t hal_uart_transmit_it(HAL_UART *huart, uint8_t *data, size_t size)
     if (huart == NULL || data == NULL || size == 0U) {
         return HAL_ERR_INVALID_PARAM;
     }
+
+#if defined(TFM_NS)
+    /* The SPE owns LPUART1 and its interrupt is targeted Secure, so the NS
+     * LPUART1_IRQHandler never runs -> the s_tx_busy poll below would hang.
+     * Fall back to a blocking transfer (registers are NS-accessible). */
+    return hal_uart_transmit(huart, data, size, 1000U);
+#else
     if (s_tx_busy) {
         return HAL_ERR_RESOURCE_BUSY;
     }
@@ -178,6 +191,7 @@ hal_err_t hal_uart_transmit_it(HAL_UART *huart, uint8_t *data, size_t size)
         }
     }
     return HAL_ERR_SUCCESS;
+#endif /* TFM_NS */
 }
 
 hal_err_t hal_uart_receive_it(HAL_UART *huart, uint8_t *data, size_t size)

@@ -30,7 +30,12 @@
  * ARM_CM33_NTZ/non_secure port: no TrustZone. On this standalone image TZEN=0,
  * so the core runs single-state; the NTZ port is the correct choice.
  */
+#if defined(TFM_NS)
+/* NSPE: match the SPE ABI (CONFIG_TFM_FLOAT_ABI=soft, CP10/CP11 not enabled). */
+#define configENABLE_FPU                            0
+#else
 #define configENABLE_FPU                            1
+#endif
 #define configENABLE_MPU                            0
 #define configENABLE_TRUSTZONE                      0
 #define configENABLE_MVE                            0
@@ -102,8 +107,15 @@
     #define configPRIO_BITS                      4
 #endif
 
+#if defined(TFM_NS)
+/* The STM32L5 non-secure NVIC implements only __NVIC_PRIO_BITS = 3
+ * (the secure side has 4). Priorities must fit 0..7. */
+#define configLIBRARY_LOWEST_INTERRUPT_PRIORITY        0x07
+#define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY   2
+#else
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY        0x0F
 #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY   5
+#endif
 
 #define configKERNEL_INTERRUPT_PRIORITY \
     ( configLIBRARY_LOWEST_INTERRUPT_PRIORITY << ( 8 - configPRIO_BITS ) )

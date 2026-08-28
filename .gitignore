@@ -5,3 +5,4 @@ stlink
 *.lib
 *.a
 *.dll
+build_ns/

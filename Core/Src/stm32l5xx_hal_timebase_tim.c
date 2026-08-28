@@ -7,6 +7,8 @@
  */
 #include "stm32l5xx_hal.h"
 
+#if !defined(TFM_NS)   /* NS build uses the DWT timebase (hal_tick_dwt.c) */
+
 static TIM_HandleTypeDef s_htim6;
 
 /* Called by HAL_Init() (and after each clock change via HAL_ResumeTick). */
@@ -77,3 +79,5 @@ void TIM6_IRQHandler(void)
 {
     HAL_TIM_IRQHandler(&s_htim6);
 }
+
+#endif /* !TFM_NS */
