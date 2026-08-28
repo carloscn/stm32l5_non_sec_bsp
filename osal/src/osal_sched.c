@@ -2,6 +2,7 @@
  * @file osal_sched.c
  */
 #include "osal_sched.h"
+#include "osal_log.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -37,4 +38,18 @@ uint32_t osal_time_get_ms(void)
         return 0U;
     }
     return (uint32_t)(xTaskGetTickCount() * portTICK_PERIOD_MS);
+}
+
+const char *osal_sched_kernel_version(void)
+{
+    return tskKERNEL_VERSION_NUMBER;
+}
+
+void osal_panic(const char *reason)
+{
+    osal_log_info("PANIC:");
+    osal_log_info((reason != NULL) ? reason : "(unspecified)");
+    taskDISABLE_INTERRUPTS();
+    for (;;) {
+    }
 }

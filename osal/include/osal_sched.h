@@ -26,6 +26,15 @@ void osal_sched_start(void);
 /** Milliseconds since scheduler start (wraps). Before start: 0. */
 uint32_t osal_time_get_ms(void);
 
+/** RTOS kernel version string, e.g. "V11.1.0". */
+const char *osal_sched_kernel_version(void);
+
+/**
+ * Unrecoverable error: log @p reason (best effort), disable interrupts, halt.
+ * Does not return. Safe to call before osal_log_init() / before the scheduler.
+ */
+void osal_panic(const char *reason) __attribute__((noreturn));
+
 #ifdef __cplusplus
 }
 #endif

@@ -8,10 +8,19 @@
 #define HAL_MCU_H
 
 #include <stdint.h>
+#include "hal_error.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * @brief Bring up the MCU: core HAL init, clock tree, flash latency, caches.
+ *        Everything platform-specific that must run before peripherals.
+ *        Call once, first thing in main().
+ * @return HAL_ERR_SUCCESS or a HAL_ERR_* code.
+ */
+hal_err_t hal_mcu_init(void);
 
 /**
  * @brief Request a full chip reset (Cortex-M33 SYSRESETREQ via SCB->AIRCR).

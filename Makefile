@@ -88,6 +88,7 @@ osal/src/osal_queue.c \
 osal/src/osal_sched.c \
 osal/src/osal_heap.c \
 osal/src/osal_log.c \
+osal/src/osal_hooks.c \
 osal/src/osal_utils.c \
 FreeRTOS/list.c \
 FreeRTOS/queue.c \
