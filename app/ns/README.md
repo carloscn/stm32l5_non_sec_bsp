@@ -1,7 +1,7 @@
 # NS build (TF-M NSPE)  — status: WIP
 
 Goal: build `stm32l5_non_sec_bsp` as the **Non-Secure app** running under the
-SPE from `../stm32l5_secure_bsp`, so `app/crypto_smoketest.c` can exercise
+SPE from `../stm32l5_secure_bsp`, so the PSA crypto smoke tests can exercise
 **PSA crypto through TF-M** (AES-CMAC + ECDSA P-256 KATs) on the real board.
 
 The standalone (no-TF-M) image is unchanged — still `make` in the repo root.
@@ -16,10 +16,9 @@ The standalone (no-TF-M) image is unchanged — still `make` in the repo root.
   round trip + negative check, via `psa_verify_message` / `psa_sign_message`.
   (mbed-crypto has no Ed25519 backend — ECDSA P-256 is the PSA-supported
   signature primitive, same as the S32K312 reference `test_ecdsa.c`.)
-- `app/crypto_smoketest.c`   — `psa_crypto_init()` + run both, PASS/FAIL log.
 - `Core/Src/main.c`          — single entry file for both builds. Under
   `#if defined(TFM_NS)` it adds `tfm_ns_interface_init()` +
-  `crypto_smoketest_run()`; `hal_mcu_init()` skips the clock tree when TFM_NS.
+  `test_psa_cmac()` + `test_psa_ecdsa_p256()`; `hal_mcu_init()` skips the clock tree when TFM_NS.
 - `app/ns/os_wrapper_osal.c` — `os_wrapper/mutex.h` for
   `tfm_ns_interface_rtos.c`, implemented on `osal_mutex_*` (no direct
   FreeRTOS calls).

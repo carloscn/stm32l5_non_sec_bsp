@@ -7,7 +7,7 @@
  *   Example 2: M (16 B)  -> T = 070a16b4 6b4d4144 f79bdd9d d04a287c
  *   Example 4: M (64 B)  -> T = 51f0bebf 7e3b9d92 fc497417 79363cfe
  */
-#include "crypto_smoketest.h"
+#include "test_psa_cmac.h"
 #include "osal_log.h"
 #include "psa/crypto.h"
 #include <string.h>
@@ -56,13 +56,21 @@ int32_t test_psa_cmac(void)
     psa_key_id_t key = PSA_KEY_ID_NULL;
     int32_t rc = 0;
 
+    psa_status_t s = psa_crypto_init();      /* idempotent */
+    if (s != PSA_SUCCESS) {
+        osal_log_printf("  CMAC: psa_crypto_init = %ld", (long)s);
+        osal_log_info("CMAC  FAIL");
+        return -1;
+    }
+
     psa_set_key_usage_flags(&attr, PSA_KEY_USAGE_SIGN_MESSAGE);
     psa_set_key_algorithm(&attr, PSA_ALG_CMAC);
     psa_set_key_type(&attr, PSA_KEY_TYPE_AES);
 
-    psa_status_t s = psa_import_key(&attr, k_key, sizeof(k_key), &key);
+    s = psa_import_key(&attr, k_key, sizeof(k_key), &key);
     if (s != PSA_SUCCESS) {
         osal_log_printf("  CMAC: psa_import_key = %ld", (long)s);
+        osal_log_info("CMAC  FAIL");
         return -1;
     }
 
@@ -70,5 +78,6 @@ int32_t test_psa_cmac(void)
     if (cmac_one(key, k_msg, 64U, k_tag_ex4, "rfc4493-ex4") != 0) rc = -1;
 
     (void)psa_destroy_key(key);
+    osal_log_info((rc == 0) ? "CMAC  PASS" : "CMAC  FAIL");
     return rc;
 }

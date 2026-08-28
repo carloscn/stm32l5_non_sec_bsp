@@ -41,7 +41,6 @@ add_executable(tfm_ns
 
     app/led.c
     app/heartbeat.c
-    app/crypto_smoketest.c
     app/test_psa_cmac.c
     app/test_psa_ecdsa_p256.c
 

@@ -23,7 +23,8 @@
 
 #if defined(TFM_NS)
 #include "tfm_ns_interface.h"
-#include "crypto_smoketest.h"
+#include "test_psa_cmac.h"
+#include "test_psa_ecdsa_p256.h"
 #endif
 
 static HAL_UART s_console = { .num = HAL_UART_0, .irq = 0U };
@@ -50,8 +51,9 @@ int main(void)
     if (tfm_ns_interface_init() != 0) {
         osal_panic("tfm_ns_interface_init");
     }
-    /* PSA crypto smoke test (CMAC + ECDSA P-256) via the TF-M Crypto partition. */
-    (void)crypto_smoketest_run();
+    /* PSA crypto smoke test via the TF-M Crypto partition. */
+    (void)test_psa_cmac();
+    (void)test_psa_ecdsa_p256();
 #endif
 
     /* --- all task creation lives here --- */

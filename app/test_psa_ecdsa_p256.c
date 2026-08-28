@@ -10,7 +10,7 @@
  *   Ux/Uy = public point;  r/s = signature over SHA-256("sample").
  * Plus a generate -> sign -> verify round trip and a negative check.
  */
-#include "crypto_smoketest.h"
+#include "test_psa_ecdsa_p256.h"
 #include "osal_log.h"
 #include "psa/crypto.h"
 #include <string.h>
@@ -122,7 +122,17 @@ static int32_t sign_verify_roundtrip(void)
 int32_t test_psa_ecdsa_p256(void)
 {
     int32_t rc = 0;
-    if (known_answer_verify() != 0)  rc = -1;
+
+    psa_status_t s = psa_crypto_init();      /* idempotent */
+    if (s != PSA_SUCCESS) {
+        osal_log_printf("  ECDSA: psa_crypto_init = %ld", (long)s);
+        osal_log_info("ECDSA P-256  FAIL");
+        return -1;
+    }
+
+    if (known_answer_verify() != 0)   rc = -1;
     if (sign_verify_roundtrip() != 0) rc = -1;
+
+    osal_log_info((rc == 0) ? "ECDSA P-256  PASS" : "ECDSA P-256  FAIL");
     return rc;
 }
