@@ -9,9 +9,11 @@
 #include "osal_sched.h"          /* osal_panic */
 #include "stm32l5xx_hal.h"
 
+#if !defined(TFM_NS)
 /* ------------------------------------------------------------- clock tree
  * MSI (RCC_MSIRANGE_6 = 4 MHz) -> PLL (M=1, N=55, R=2) => SYSCLK = 110 MHz.
  * Keep configCPU_CLOCK_HZ / osal_utils.c CORE_CLOCK_HZ in sync (110 MHz).
+ * Not built for the NSPE (the SPE owns the clock tree).
  */
 static hal_err_t clock_config(void)
 {
@@ -48,6 +50,7 @@ static hal_err_t clock_config(void)
     }
     return HAL_ERR_SUCCESS;
 }
+#endif /* !TFM_NS */
 
 static hal_err_t icache_enable(void)
 {
@@ -62,15 +65,19 @@ static hal_err_t icache_enable(void)
 
 hal_err_t hal_mcu_init(void)
 {
-    hal_err_t rc;
-
     if (HAL_Init() != HAL_OK) {          /* NVIC group, HAL tick (TIM6 - see timebase file) */
         return HAL_ERR_INTERNAL;
     }
-    rc = clock_config();
+
+#if !defined(TFM_NS)
+    /* As the TF-M NSPE the SPE already configured the clock tree / flash
+     * latency; the NS world must not touch those (secure) registers. */
+    hal_err_t rc = clock_config();
     if (rc != HAL_ERR_SUCCESS) {
         return rc;
     }
+#endif
+
     return icache_enable();
 }
 

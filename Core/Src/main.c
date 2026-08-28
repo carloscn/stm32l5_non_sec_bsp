@@ -1,11 +1,13 @@
 /**
  ******************************************************************************
  * @file    main.c
- * @brief   Standalone (no-TF-M) application entry: HAL + OSAL only.
+ * @brief   Application entry -- HAL + OSAL only. One file for both builds:
+ *            - standalone (no TF-M): make
+ *            - TF-M NSPE (TFM_NS defined): CMakeLists.txt (see ns/README.md)
  *
- * No ST-HAL / CMSIS / FreeRTOS types. MCU bring-up is hal_mcu_init(); RTOS
- * glue is behind osal_*. Every task is created HERE (one place to see what
- * runs); each feature module only provides its task function.
+ * No ST-HAL / CMSIS / FreeRTOS types here. MCU bring-up is hal_mcu_init()
+ * (which itself skips the clock tree when running as the NSPE -- the SPE
+ * already set it). Every task is created HERE, one place.
  * Structure mirrors FreeRTOS_Toggle_Led_Example_S32K312/src/main.c.
  ******************************************************************************
  */
@@ -19,6 +21,11 @@
 #include "led.h"
 #include "heartbeat.h"
 
+#if defined(TFM_NS)
+#include "tfm_ns_interface.h"
+#include "crypto_smoketest.h"
+#endif
+
 static HAL_UART s_console = { .num = HAL_UART_0, .irq = 0U };
 
 int main(void)
@@ -31,8 +38,21 @@ int main(void)
     (void)hal_uart_init(&s_console);
     osal_log_init(&s_console);
 
-    osal_log_printf("stm32l5_non_sec_bsp: FreeRTOS %s up",
+    osal_log_printf("stm32l5_non_sec_bsp%s: FreeRTOS %s up",
+#if defined(TFM_NS)
+                    " (NSPE)",
+#else
+                    "",
+#endif
                     osal_sched_kernel_version());
+
+#if defined(TFM_NS)
+    if (tfm_ns_interface_init() != 0) {
+        osal_panic("tfm_ns_interface_init");
+    }
+    /* PSA crypto smoke test (CMAC + ECDSA P-256) via the TF-M Crypto partition. */
+    (void)crypto_smoketest_run();
+#endif
 
     /* --- all task creation lives here --- */
     if (osal_task_create(led_task, "led",

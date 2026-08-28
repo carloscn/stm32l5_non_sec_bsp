@@ -62,7 +62,7 @@ void osal_sem_destroy(osal_sem_t s)
 osal_err_t osal_sem_take(osal_sem_t s, uint32_t timeout_ms)
 {
     if ((NULL == s) || (NULL == s->h)) {
-        return OSAL_ERR_PARAM;
+        return OSAL_ERR_INVALID_PARAM;
     }
     if (pdTRUE != xSemaphoreTake(s->h, ms_to_ticks(timeout_ms))) {
         return OSAL_ERR_TIMEOUT;
@@ -73,10 +73,10 @@ osal_err_t osal_sem_take(osal_sem_t s, uint32_t timeout_ms)
 osal_err_t osal_sem_give(osal_sem_t s)
 {
     if ((NULL == s) || (NULL == s->h)) {
-        return OSAL_ERR_PARAM;
+        return OSAL_ERR_INVALID_PARAM;
     }
     if (pdTRUE != xSemaphoreGive(s->h)) {
-        return OSAL_ERR;
+        return OSAL_ERR_SEM_OVERFLOW;
     }
     return OSAL_OK;
 }
@@ -86,10 +86,10 @@ osal_err_t osal_sem_give_from_isr(osal_sem_t s, bool *higher_prio_woken)
     BaseType_t woken = pdFALSE;
 
     if ((NULL == s) || (NULL == s->h)) {
-        return OSAL_ERR_PARAM;
+        return OSAL_ERR_INVALID_PARAM;
     }
     if (pdTRUE != xSemaphoreGiveFromISR(s->h, &woken)) {
-        return OSAL_ERR;
+        return OSAL_ERR_SEM_OVERFLOW;
     }
     if (NULL != higher_prio_woken) {
         *higher_prio_woken = (pdTRUE == woken);

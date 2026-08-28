@@ -16,21 +16,21 @@ osal_err_t osal_task_create(osal_task_fn_t fn, const char *name,
     TaskHandle_t th = NULL;
     BaseType_t ok;
 
-    if (NULL == fn) {
-        return OSAL_ERR_PARAM;
+    if ((NULL == fn) || (0U == stack_words)) {
+        return OSAL_ERR_INVALID_PARAM;
     }
 
     ok = xTaskCreate((TaskFunction_t)fn, name, (configSTACK_DEPTH_TYPE)stack_words,
                      arg, (UBaseType_t)priority, &th);
     if (pdPASS != ok) {
-        return OSAL_ERR_NOMEM;
+        return OSAL_ERR_TASK_CREATE_FAILED;
     }
 
     if (NULL != out_handle) {
         osal_task_t t = (osal_task_t)pvPortMalloc(sizeof(*t));
         if (NULL == t) {
             vTaskDelete(th);
-            return OSAL_ERR_NOMEM;
+            return OSAL_ERR_OUT_OF_MEMORY;
         }
         t->h = th;
         *out_handle = t;

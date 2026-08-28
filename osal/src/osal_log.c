@@ -41,7 +41,7 @@ static void LogTask(void *pvParameters)
 
     (void)pvParameters;
     for (;;) {
-        if (OSAL_OK == osal_queue_receive(s_log_q, &msg, OSAL_WAIT_FOREVER)) {
+        if (OSAL_IS_OK(osal_queue_receive(s_log_q, &msg, OSAL_WAIT_FOREVER))) {
             osal_log_tx(msg.text);
         }
     }

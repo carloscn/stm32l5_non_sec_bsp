@@ -49,7 +49,7 @@ void osal_mutex_destroy(osal_mutex_t m)
 osal_err_t osal_mutex_take(osal_mutex_t m, uint32_t timeout_ms)
 {
     if ((NULL == m) || (NULL == m->h)) {
-        return OSAL_ERR_PARAM;
+        return OSAL_ERR_INVALID_PARAM;
     }
     if (!osal_sched_is_running()) {
         return OSAL_OK;
@@ -63,13 +63,13 @@ osal_err_t osal_mutex_take(osal_mutex_t m, uint32_t timeout_ms)
 osal_err_t osal_mutex_give(osal_mutex_t m)
 {
     if ((NULL == m) || (NULL == m->h)) {
-        return OSAL_ERR_PARAM;
+        return OSAL_ERR_INVALID_PARAM;
     }
     if (!osal_sched_is_running()) {
         return OSAL_OK;
     }
     if (pdTRUE != xSemaphoreGive(m->h)) {
-        return OSAL_ERR;
+        return OSAL_ERR_MUTEX_NOT_OWNED;
     }
     return OSAL_OK;
 }

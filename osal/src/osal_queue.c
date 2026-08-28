@@ -48,10 +48,10 @@ void osal_queue_destroy(osal_queue_t q)
 osal_err_t osal_queue_send(osal_queue_t q, const void *item, uint32_t timeout_ms)
 {
     if ((NULL == q) || (NULL == q->h) || (NULL == item)) {
-        return OSAL_ERR_PARAM;
+        return OSAL_ERR_INVALID_PARAM;
     }
     if (pdTRUE != xQueueSend(q->h, item, ms_to_ticks(timeout_ms))) {
-        return OSAL_ERR_TIMEOUT;
+        return (OSAL_WAIT_NONE == timeout_ms) ? OSAL_ERR_QUEUE_FULL : OSAL_ERR_TIMEOUT;
     }
     return OSAL_OK;
 }
@@ -59,10 +59,10 @@ osal_err_t osal_queue_send(osal_queue_t q, const void *item, uint32_t timeout_ms
 osal_err_t osal_queue_receive(osal_queue_t q, void *item, uint32_t timeout_ms)
 {
     if ((NULL == q) || (NULL == q->h) || (NULL == item)) {
-        return OSAL_ERR_PARAM;
+        return OSAL_ERR_INVALID_PARAM;
     }
     if (pdTRUE != xQueueReceive(q->h, item, ms_to_ticks(timeout_ms))) {
-        return OSAL_ERR_TIMEOUT;
+        return (OSAL_WAIT_NONE == timeout_ms) ? OSAL_ERR_QUEUE_EMPTY : OSAL_ERR_TIMEOUT;
     }
     return OSAL_OK;
 }
@@ -73,10 +73,10 @@ osal_err_t osal_queue_send_from_isr(osal_queue_t q, const void *item,
     BaseType_t woken = pdFALSE;
 
     if ((NULL == q) || (NULL == q->h) || (NULL == item)) {
-        return OSAL_ERR_PARAM;
+        return OSAL_ERR_INVALID_PARAM;
     }
     if (pdTRUE != xQueueSendFromISR(q->h, item, &woken)) {
-        return OSAL_ERR;
+        return OSAL_ERR_QUEUE_FULL;
     }
     if (NULL != higher_prio_woken) {
         *higher_prio_woken = (pdTRUE == woken);

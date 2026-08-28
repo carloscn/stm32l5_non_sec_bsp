@@ -77,12 +77,14 @@ Core/Src/sysmem.c \
 Core/Src/syscalls.c \
 app/led.c \
 app/heartbeat.c \
+hal/src/hal_error.c \
 hal/src/hal_gpio.c \
 hal/src/hal_uart.c \
 hal/src/hal_irq.c \
 hal/src/hal_mcu.c \
 hal/src/hal_flash.c \
 hal/src/hal_cache.c \
+osal/src/osal_error.c \
 osal/src/osal_task.c \
 osal/src/osal_mutex.c \
 osal/src/osal_sem.c \

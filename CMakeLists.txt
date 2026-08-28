@@ -34,7 +34,7 @@ set(FRTOS   ${CMAKE_CURRENT_SOURCE_DIR}/FreeRTOS)
 set(CUBE    ${CMAKE_CURRENT_SOURCE_DIR}/STM32CubeL5/Drivers)
 
 add_executable(tfm_ns
-    ns/main.c
+    Core/Src/main.c
     ns/os_wrapper_freertos.c
     ${CONFIG_SPE_PATH}/interface/src/os_wrapper/tfm_ns_interface_rtos.c
     ${CONFIG_SPE_PATH}/platform/Device/Source/startup_stm32l5xx_ns.c
@@ -45,12 +45,14 @@ add_executable(tfm_ns
     app/test_psa_cmac.c
     app/test_psa_ecdsa_p256.c
 
+    hal/src/hal_error.c
     hal/src/hal_gpio.c
     hal/src/hal_uart.c
     hal/src/hal_irq.c
     hal/src/hal_mcu.c
     hal/src/hal_cache.c
 
+    osal/src/osal_error.c
     osal/src/osal_task.c
     osal/src/osal_mutex.c
     osal/src/osal_sem.c

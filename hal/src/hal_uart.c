@@ -55,7 +55,7 @@ static int32_t lpuart1_msp_init(void)
     return HAL_ERR_SUCCESS;
 }
 
-int32_t hal_uart_init(HAL_UART *huart)
+hal_err_t hal_uart_init(HAL_UART *huart)
 {
     if (huart == NULL || huart->num >= HAL_UART_NUM_MAX) {
         return HAL_ERR_INVALID_PARAM;
@@ -105,7 +105,7 @@ void hal_uart_deinit(HAL_UART *huart)
 
 /* ------------------------------------------------------------- blocking TX/RX */
 
-int32_t hal_uart_transmit(HAL_UART *huart, uint8_t *data, size_t size, size_t timeout_ms)
+hal_err_t hal_uart_transmit(HAL_UART *huart, uint8_t *data, size_t size, size_t timeout_ms)
 {
     if (huart == NULL || data == NULL || size == 0U) {
         return HAL_ERR_INVALID_PARAM;
@@ -121,7 +121,7 @@ int32_t hal_uart_transmit(HAL_UART *huart, uint8_t *data, size_t size, size_t ti
     return (st == HAL_OK) ? HAL_ERR_SUCCESS : HAL_ERR_UART_XFER_FAILED;
 }
 
-int32_t hal_uart_receive(HAL_UART *huart, uint8_t *data, size_t size, size_t timeout_ms)
+hal_err_t hal_uart_receive(HAL_UART *huart, uint8_t *data, size_t size, size_t timeout_ms)
 {
     if (huart == NULL || data == NULL || size == 0U) {
         return HAL_ERR_INVALID_PARAM;
@@ -155,7 +155,7 @@ int32_t hal_uart_receive(HAL_UART *huart, uint8_t *data, size_t size, size_t tim
 
 /* ------------------------------------------------------------- interrupt TX/RX */
 
-int32_t hal_uart_transmit_it(HAL_UART *huart, uint8_t *data, size_t size)
+hal_err_t hal_uart_transmit_it(HAL_UART *huart, uint8_t *data, size_t size)
 {
     if (huart == NULL || data == NULL || size == 0U) {
         return HAL_ERR_INVALID_PARAM;
@@ -180,7 +180,7 @@ int32_t hal_uart_transmit_it(HAL_UART *huart, uint8_t *data, size_t size)
     return HAL_ERR_SUCCESS;
 }
 
-int32_t hal_uart_receive_it(HAL_UART *huart, uint8_t *data, size_t size)
+hal_err_t hal_uart_receive_it(HAL_UART *huart, uint8_t *data, size_t size)
 {
     if (huart == NULL || data == NULL || size == 0U) {
         return HAL_ERR_INVALID_PARAM;
@@ -197,7 +197,7 @@ int32_t hal_uart_receive_it(HAL_UART *huart, uint8_t *data, size_t size)
     return HAL_ERR_SUCCESS;
 }
 
-int32_t hal_uart_get_receive_status(HAL_UART *huart, size_t *bytes_remaining)
+hal_err_t hal_uart_get_receive_status(HAL_UART *huart, size_t *bytes_remaining)
 {
     if (huart == NULL || bytes_remaining == NULL) {
         return HAL_ERR_INVALID_PARAM;
@@ -215,7 +215,7 @@ void hal_uart_abort_receive(HAL_UART *huart)
 
 /* --------------------------------------------------------------- line editor */
 
-int32_t hal_uart_read_line(HAL_UART *huart, char *buf, size_t buf_size,
+hal_err_t hal_uart_read_line(HAL_UART *huart, char *buf, size_t buf_size,
                            size_t idle_timeout_ms, size_t *out_len)
 {
     if (huart == NULL || buf == NULL || buf_size < 2U || out_len == NULL) {

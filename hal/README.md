@@ -5,6 +5,15 @@ Kept **API-synchronised** with
 diagnostics, business logic) moves between the S32K312 and STM32L552 targets
 unchanged.
 
+> **Sync note.** `osal/` `.c` files, `osal_error.[ch]`, `osal_types.h`,
+> `hal_error.[ch]`, `hal_uart.h`, and the `hal_*.h` API contracts are kept
+> byte-for-byte in step with the S32K312 project. Re-copy when it changes.
+> STM32L5-only deviations: `osal_utils.c` clock constant (110 MHz);
+> `hal_error.h` omits the `#define HAL_OK` alias (collides with ST HAL's
+> `HAL_StatusTypeDef` enumerator) — use `HAL_ERR_SUCCESS` / `HAL_IS_OK()`;
+> `hal_mcu.h` adds `hal_mcu_init()`; `osal_sched.h` adds `osal_panic()` /
+> `osal_sched_kernel_version()`; `osal_hooks.c` is STM32L5-side.
+
 ## osal/  — FreeRTOS wrapper (portable, no MCU code)
 
 | header | what |
