@@ -11,7 +11,7 @@
 #    cmake --build build_ns
 #
 #  The standalone (no-TF-M) image is still built with the Makefile.
-#  STATUS: work in progress -- see ns/README.md.
+#  STATUS: work in progress -- see app/ns/README.md.
 #-------------------------------------------------------------------------------
 cmake_minimum_required(VERSION 3.21)
 
@@ -35,7 +35,7 @@ set(CUBE    ${CMAKE_CURRENT_SOURCE_DIR}/STM32CubeL5/Drivers)
 
 add_executable(tfm_ns
     Core/Src/main.c
-    ns/os_wrapper_freertos.c
+    app/ns/os_wrapper_osal.c
     ${CONFIG_SPE_PATH}/interface/src/os_wrapper/tfm_ns_interface_rtos.c
     ${CONFIG_SPE_PATH}/platform/Device/Source/startup_stm32l5xx_ns.c
 
@@ -112,5 +112,5 @@ target_link_libraries(tfm_ns PRIVATE
 )
 
 # NS linker script (preprocessed template) + signing come from the SPE export.
-# TODO(ns/README.md): wire target_add_scatter_file() / the tfm_ns_signed_bin
+# TODO(app/ns/README.md): wire target_add_scatter_file() / the tfm_ns_signed_bin
 # custom target from ${CONFIG_SPE_PATH}/CMakeLists.txt.

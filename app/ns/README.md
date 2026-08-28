@@ -20,8 +20,9 @@ The standalone (no-TF-M) image is unchanged — still `make` in the repo root.
 - `Core/Src/main.c`          — single entry file for both builds. Under
   `#if defined(TFM_NS)` it adds `tfm_ns_interface_init()` +
   `crypto_smoketest_run()`; `hal_mcu_init()` skips the clock tree when TFM_NS.
-- `ns/os_wrapper_freertos.c` — `os_wrapper/mutex.h` on FreeRTOS (for
-  `tfm_ns_interface_rtos.c`).
+- `app/ns/os_wrapper_osal.c` — `os_wrapper/mutex.h` for
+  `tfm_ns_interface_rtos.c`, implemented on `osal_mutex_*` (no direct
+  FreeRTOS calls).
 - `CMakeLists.txt`           — NS-app project skeleton (consumes `CONFIG_SPE_PATH`).
 
 ## Open (to finish the NS build)
