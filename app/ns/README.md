@@ -18,12 +18,11 @@ The standalone (no-TF-M) image is unchanged — still `make` in the repo root.
   signature primitive, same as the S32K312 reference `test_ecdsa.c`.)
 - `app/crypto_smoketest.c`   — `psa_crypto_init()` + run both, PASS/FAIL log.
 - `Core/Src/main.c`          — single entry file for both builds. Under
-  `#if defined(TFM_NS)` it calls `osal_tfm_ns_init()` + `crypto_smoketest_run()`;
-  `hal_mcu_init()` skips the clock tree when TFM_NS. No `tfm_*` include.
-- `osal/src/osal_tfm.c`      — the only TF-M-aware file: `osal_tfm_ns_init()`
-  (-> `tfm_ns_interface_init`) plus the `os_wrapper/mutex.h` hooks that
-  `tfm_ns_interface_rtos.c` needs, implemented on `osal_mutex_*`. App/Core
-  code never touches `tfm_*` or `os_wrapper/*`.
+  `#if defined(TFM_NS)` it adds `tfm_ns_interface_init()` +
+  `crypto_smoketest_run()`; `hal_mcu_init()` skips the clock tree when TFM_NS.
+- `app/ns/os_wrapper_osal.c` — `os_wrapper/mutex.h` for
+  `tfm_ns_interface_rtos.c`, implemented on `osal_mutex_*` (no direct
+  FreeRTOS calls).
 - `CMakeLists.txt`           — NS-app project skeleton (consumes `CONFIG_SPE_PATH`).
 
 ## Open (to finish the NS build)

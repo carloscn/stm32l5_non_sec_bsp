@@ -22,7 +22,7 @@
 #include "heartbeat.h"
 
 #if defined(TFM_NS)
-#include "osal_tfm.h"
+#include "tfm_ns_interface.h"
 #include "crypto_smoketest.h"
 #endif
 
@@ -47,8 +47,8 @@ int main(void)
                     osal_sched_kernel_version());
 
 #if defined(TFM_NS)
-    if (osal_tfm_ns_init() != OSAL_OK) {
-        osal_panic("osal_tfm_ns_init");
+    if (tfm_ns_interface_init() != 0) {
+        osal_panic("tfm_ns_interface_init");
     }
     /* PSA crypto smoke test (CMAC + ECDSA P-256) via the TF-M Crypto partition. */
     (void)crypto_smoketest_run();
