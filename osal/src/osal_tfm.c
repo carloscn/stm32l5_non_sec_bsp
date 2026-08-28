@@ -1,15 +1,24 @@
 /**
- * @file app/ns/os_wrapper_osal.c
- * @brief os_wrapper/mutex.h for TF-M's tfm_ns_interface_rtos.c, implemented on
- *        the OSAL layer (no direct FreeRTOS calls). Makes NS->SPE PSA calls
- *        thread-safe.
+ * @file osal_tfm.c
+ * @brief TF-M NSPE glue (see osal_tfm.h). Built only in the TF-M NS build.
  *
- * Before the scheduler starts osal_mutex_take/give are no-op success, which is
- * fine: the pre-scheduler crypto_smoketest_run() is single-threaded.
+ * Two responsibilities:
+ *   1. osal_tfm_ns_init() -> tfm_ns_interface_init()
+ *   2. define the os_wrapper mutex hooks that tfm_ns_interface_rtos.c calls,
+ *      implemented on osal_mutex_* (no direct FreeRTOS here).
  */
-#include "os_wrapper/mutex.h"
+#include "osal_tfm.h"
 #include "osal_mutex.h"
-#include "osal_types.h"
+
+#include "tfm_ns_interface.h"
+#include "os_wrapper/mutex.h"
+
+osal_err_t osal_tfm_ns_init(void)
+{
+    return (tfm_ns_interface_init() == 0U) ? OSAL_OK : OSAL_ERR_INTERNAL;
+}
+
+/* ---- os_wrapper/mutex.h: required by tfm_ns_interface_rtos.c ------------- */
 
 void *os_wrapper_mutex_create(void)
 {
