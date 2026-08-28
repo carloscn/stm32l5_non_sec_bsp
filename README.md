@@ -7,10 +7,36 @@
 
 ## Compile code
 
+### Linux / macOS
+
 1. Config your cross compile tool path in `prj.cfg`
 2. `source prj.cfg`
 3. `git submodule update --init --recursive`
 4. `make -j8`
+
+### Windows
+
+Build runs through **Git Bash** (ships with [Git for Windows](https://git-scm.com/download/win)),
+which provides `bash`, `make` and `git`. The same `prj.cfg` / `make` flow is used.
+
+1. Install the bare-metal Arm GNU toolchain (13.3.Rel1 recommended,
+   `arm-gnu-toolchain-*-mingw-w64-i686-arm-none-eabi`). The `prj.cfg` Windows
+   branch expects it at
+   `C:/opt/cross_compile/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/bin`
+   — edit `GCC_PATH` in `prj.cfg` if you put it elsewhere.
+2. Open **Git Bash** in the project folder and run:
+   ```bash
+   git submodule update --init --recursive
+   source prj.cfg
+   make -j8
+   ```
+3. From **PowerShell / cmd** you can instead use the wrappers (they just call
+   Git Bash under the hood):
+   ```bat
+   build.bat            :: make -j8
+   build.bat clean      :: make clean
+   flash.bat            :: run flash.sh
+   ```
 
 ## Donwload code
 

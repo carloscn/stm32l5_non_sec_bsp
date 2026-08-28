@@ -92,6 +92,16 @@ ASMM_SOURCES =
 PREFIX = arm-none-eabi-
 # The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
 # either it can be added to the PATH environment variable.
+# Fallback: on Windows, if neither GCC_PATH nor PATH is set up (e.g. running
+# `make` without `source prj.cfg`), auto-detect the downloaded toolchain.
+ifndef GCC_PATH
+ifeq ($(OS),Windows_NT)
+_WIN_GCC_PATH := C:/opt/cross_compile/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/bin
+ifneq ($(wildcard $(_WIN_GCC_PATH)/$(PREFIX)gcc.exe),)
+GCC_PATH := $(_WIN_GCC_PATH)
+endif
+endif
+endif
 ifdef GCC_PATH
 CC = $(GCC_PATH)/$(PREFIX)gcc
 AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
