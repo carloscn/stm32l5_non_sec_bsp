@@ -101,15 +101,25 @@
 #define INCLUDE_xQueueGetMutexHolder             1
 
 /*------------------------------------------------------------- Cortex-M NVIC */
-#ifdef __NVIC_PRIO_BITS
+#if defined(TFM_NS)
+/* The STM32L5 *non-secure* NVIC implements only 3 priority bits (the secure
+ * side has 4). Pin this explicitly: FreeRTOSConfig.h is parsed before the CMSIS
+ * device header, so __NVIC_PRIO_BITS is not yet visible here and the fallback
+ * (4) would be wrong. With TF-M's AIRCR.PRIS=1 remap, a wrong shift makes
+ * configMAX_SYSCALL_INTERRUPT_PRIORITY (BASEPRI at scheduler start) collide with
+ * the NS SVCall priority -> the first-task `svc` is priority-blocked -> forced
+ * HardFault in vStartFirstTask. */
+#define configPRIO_BITS                          3
+#elif defined(__NVIC_PRIO_BITS)
     #define configPRIO_BITS                      __NVIC_PRIO_BITS
 #else
     #define configPRIO_BITS                      4
 #endif
 
 #if defined(TFM_NS)
-/* The STM32L5 non-secure NVIC implements only __NVIC_PRIO_BITS = 3
- * (the secure side has 4). Priorities must fit 0..7. */
+/* 3 priority bits, and PRIS=1 effectively costs one more -> keep SVCall (0x00)
+ * strictly above BASEPRI. LOWEST 0x07 -> PendSV/SysTick at 0xE0; MAX_SYSCALL 2
+ * -> BASEPRI 0x40 (PRIS-mapped 0xA0), above SVCall's PRIS-mapped 0x80. */
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY        0x07
 #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY   2
 #else
