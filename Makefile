@@ -116,29 +116,46 @@ ASMM_SOURCES =
 # binaries
 #######################################
 PREFIX = arm-none-eabi-
-# The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
-# either it can be added to the PATH environment variable.
-# Fallback: on Windows, if neither GCC_PATH nor PATH is set up (e.g. running
-# `make` without `source prj.cfg`), auto-detect the downloaded toolchain.
-ifndef GCC_PATH
-ifeq ($(OS),Windows_NT)
-_WIN_GCC_PATH := C:/opt/cross_compile/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/bin
-ifneq ($(wildcard $(_WIN_GCC_PATH)/$(PREFIX)gcc.exe),)
-GCC_PATH := $(_WIN_GCC_PATH)
-endif
-endif
-endif
-ifdef GCC_PATH
-CC = $(GCC_PATH)/$(PREFIX)gcc
-AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
-CP = $(GCC_PATH)/$(PREFIX)objcopy
-SZ = $(GCC_PATH)/$(PREFIX)size
+# Toolchain bin/ path comes from toolchain.cfg (shared with prj.cfg).
+# One-off override:  make GCC_PATH=/path/to/toolchain/bin
+-include toolchain.cfg
+# $(OS) is not always inherited (e.g. MSYS2 make started from Git Bash), so
+# also look at uname: MINGW64_NT-* / MSYS_NT-* / CYGWIN_NT-* mean Windows.
+_UNAME := $(shell uname -s 2>/dev/null)
+ifneq ($(OS)$(findstring _NT,$(_UNAME)),)
+_HOST_TOOLCHAIN := $(TOOLCHAIN_WIN)
+EXE := .exe
+else ifeq ($(_UNAME),Darwin)
+_HOST_TOOLCHAIN := $(TOOLCHAIN_MAC)
 else
-CC = $(PREFIX)gcc
-AS = $(PREFIX)gcc -x assembler-with-cpp
-CP = $(PREFIX)objcopy
-SZ = $(PREFIX)size
+_HOST_TOOLCHAIN := $(TOOLCHAIN_LINUX)
 endif
+ifndef GCC_PATH
+GCC_PATH := $(_HOST_TOOLCHAIN)
+endif
+# Accept C:\style\paths too.
+TC_BIN := $(subst \,/,$(strip $(GCC_PATH)))
+
+# Stop early with a clear hint instead of "gcc: command not found", or silently
+# using whatever arm-none-eabi-gcc happens to be first in PATH.
+ifeq ($(filter clean,$(MAKECMDGOALS)),)
+ifeq ($(wildcard $(TC_BIN)/$(PREFIX)gcc$(EXE)),)
+$(info )
+$(info [ERR] Arm toolchain not found: '$(TC_BIN)/$(PREFIX)gcc$(EXE)')
+$(info )
+$(info       Edit toolchain.cfg in this folder and point the entry for your OS)
+$(info       (TOOLCHAIN_WIN / TOOLCHAIN_LINUX / TOOLCHAIN_MAC) at the toolchain's bin/ dir,)
+$(info       or build once with:  make GCC_PATH=/path/to/toolchain/bin)
+$(info       Download: https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
+$(info )
+$(error Arm GNU toolchain not configured)
+endif
+endif
+
+CC = $(TC_BIN)/$(PREFIX)gcc
+AS = $(TC_BIN)/$(PREFIX)gcc -x assembler-with-cpp
+CP = $(TC_BIN)/$(PREFIX)objcopy
+SZ = $(TC_BIN)/$(PREFIX)size
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 
